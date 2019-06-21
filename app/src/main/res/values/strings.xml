@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MoodChan</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fragment_login">Hello blank fragment</string>
+    <string name="img_normal">normal</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="email">email</string>
+    <string name="signup">signup</string>
+</resources>
