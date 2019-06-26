@@ -9,4 +9,8 @@
     <string name="login">login</string>
     <string name="email">email</string>
     <string name="signup">signup</string>
+    <string name="signout">signout</string>
+    <string name="font_fontFamily_medium">sans-serif</string>
+    <string name="send_button">send</string>
+    <string name="message">message</string>
 </resources>
