@@ -1,4 +1,4 @@
-package com.example.moodchan
+package com.example.moodchan.models
 
 data class RowModel(
     val messageText: String = ""

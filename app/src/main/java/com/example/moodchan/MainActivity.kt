@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-//var db = FirebaseFirestore.getInstance()
+
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             if (auth.currentUser != null) {
-                Log.d(TAG, auth.currentUser.toString())
+                Log.d(TAG, auth.currentUser?.uid.toString())
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.add(R.id.detailContainer, ChatFragment())
                 .commit()
@@ -34,6 +34,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }

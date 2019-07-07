@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.FragmentManager
+import com.example.moodchan.utils.UserAuth
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.fragment_login.*
 //import android.R
@@ -21,16 +22,13 @@ import java.io.IOException
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.example.moodchan.utils.toastMake
+import kotlinx.android.synthetic.main.fragment_signup.*
+
 
 class LoginFragment : Fragment() {
 
-
-    private fun toastMake(message: String, x: Int, y: Int) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-        // 位置調整
-        toast.setGravity(Gravity.CENTER, x, y)
-        toast.show()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,29 +40,20 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val auth = FirebaseAuth.getInstance()
 
         buttonLogin.setOnClickListener {
+            val activity = this.activity ?: return@setOnClickListener
             if (emailTextLogin.text.toString() == "" || pwTextLogin.text.toString() == "") {
-                toastMake("入力してください", 0, -200)
+                toastMake("Please Input", 0, -200, activity)
             } else {
                 val email = emailTextLogin.text.toString()
                 val password = pwTextLogin.text.toString()
-                val activity = this.activity ?: return@setOnClickListener
+
                 val fm: FragmentManager = fragmentManager ?: return@setOnClickListener
+                val user = UserAuth()
 
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(activity) { task ->
-                        if (task.isSuccessful) {
-                            //toastMake("login成功",0,-200)
+                user.signIn(email, password, null,false, activity, fm)
 
-                            fm.beginTransaction()
-                                .replace(R.id.detailContainer, ChatFragment())
-                                .commit()
-                        } else {
-                            toastMake("login失敗",0,-200)
-                        }
-                    }
             }
         }
 

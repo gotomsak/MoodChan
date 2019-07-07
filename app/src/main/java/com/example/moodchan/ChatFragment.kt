@@ -2,23 +2,28 @@ package com.example.moodchan
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.moodchan.models.ChatLogModel
+import com.example.moodchan.models.RowModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_login.*
-import java.io.LineNumberReader
+
+import java.util.*
 
 
 class ChatFragment: Fragment(){
+    private val listUser = mutableListOf<ChatLogModel>()
+    lateinit var adapter: UserViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
@@ -26,22 +31,42 @@ class ChatFragment: Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val chatlog: MutableList<String> = mutableListOf()
+
         super.onViewCreated(view, savedInstanceState)
-        val user = FirebaseAuth.getInstance().currentUser
-        val list = listOf(RowModel("Hello"), RowModel("Hoge"))
-        val adapter = ViewAdapter(list)
-        chatRecycler.layoutManager = LinearLayoutManager(this.activity)
-        chatRecycler.adapter = adapter
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        val db = FirebaseFirestore.getInstance()
 
-        user?.let {
-            val name = user.displayName
-            val email = user.email
-            val emailVerified = user.isEmailVerified
-            val uid = user.uid
-            Log.d(TAG, name)
+        chatUserRecycler.layoutManager = LinearLayoutManager(this.activity)
+        adapter = UserViewAdapter(listUser)
+        chatUserRecycler.adapter = adapter
+        db.collection("chatlogs").document(user?.uid.toString())
+            .collection("textlog").addSnapshotListener{ snapshot ,e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
 
-        }
+                val dbList = mutableListOf<ChatLogModel>()
+                for (doc in snapshot!!){
+                    dbList.add(
+                        ChatLogModel(
+                            doc.data.get("username").toString(),
+                            doc.data.get("userMassage").toString(),
+                            doc.data.get("chatId").toString())
+                    )
+                    Log.d("getlist", doc.data.get("userMassage").toString())
+                }
+                val addList = dbList - listUser
+                Log.i("debug", addList.toString())
+
+                addList.forEach {
+                    listUser.add(it)
+                    adapter.notifyDataSetChanged()
+                    chatUserRecycler.smoothScrollToPosition(adapter.itemCount - 1)
+                }
+            }
+
 
         buttonSignOut.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -51,8 +76,52 @@ class ChatFragment: Fragment(){
                 .commit()
         }
 
+        messageChatSend.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val str = s ?: return
+                buttonMessageSend.isEnabled = !str.isBlank()
+            }
+        })
+
         buttonMessageSend.setOnClickListener{
-            chatlog.add(messageChatSend.toString())
+            if(messageChatSend.text.toString() == ""){
+                return@setOnClickListener
+            }
+
+            val uid = user?.uid.toString()
+            db.collection("users").document(uid).get().addOnCompleteListener{ task ->
+                if (task.isSuccessful){
+                    Log.d("nameGet", "success")
+                    val date = Date()
+                    val dateF: String = DateFormat.format("yyyy_MM_dd kk:mm:ss", date).toString()
+                    val chatLogSize:Int = listUser.size + 1
+                    Log.i("kusoga", chatLogSize.toString())
+                    val chatlog = ChatLogModel(task.result?.data?.get("username").toString(),
+                        messageChatSend.text.toString(), chatLogSize.toString())
+                    db.collection("chatlogs").document(uid)
+                        .collection("textlog").document(dateF).set(chatlog)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "addDataSecondCollection")
+                            messageChatSend.setText("")
+                        }
+                        .addOnFailureListener {
+                                e -> Log.d(TAG, "Error adding document" + e)
+                        }
+
+                } else {
+                    Log.d("nameGet", "failed")
+                }
+
+            }
+
 
         }
 
@@ -60,13 +129,5 @@ class ChatFragment: Fragment(){
 }
 
 
-//class RowModel {
-//    var text: String = ""
-//
-//}
-//class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-//    val titleView: TextView = itemView.findViewById(R.id.chatBotSend)
-//
-//}
 
 
