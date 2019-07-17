@@ -52,7 +52,7 @@ class ChatFragment: Fragment(){
                     dbList.add(
                         ChatLogModel(
                             doc.data.get("username").toString(),
-                            doc.data.get("userMassage").toString(),
+                            doc.data.get("userMessage").toString(),
                             doc.data.get("chatId").toString())
                     )
                     Log.d("getlist", doc.data.get("userMassage").toString())
