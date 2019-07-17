@@ -1,66 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".LoginFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+<!-- TODO: Update blank fragment layout -->
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LoginFragment">
+    <ImageView
+            android:id="@+id/imageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/normal"
+            android:contentDescription="@string/img_normal"
+    />
+    <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleView"
+            android:text="@string/app_name" android:textAlignment="center" android:textSize="36sp"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="94dp"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:hint="@string/email"
+            android:autofillHints="@string/email"
+            android:id="@+id/emailTextLogin"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="94dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:hint="@string/password"
+            android:autofillHints="@string/password"
+            android:id="@+id/pwTextLogin"/>
     <LinearLayout
             android:gravity="center"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <ImageView
-                android:id="@+id/imageTitle"
-                android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <Button android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/normal"
-                android:contentDescription="@string/img_normal"
+                android:text="@string/login"
+                android:id="@+id/buttonLogin"/>
+
+
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/signup"
+                android:id="@+id/buttonSignUpView"
         />
-        <TextView
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/titleView"
-                android:text="@string/app_name" android:textAlignment="center" android:textSize="36sp"/>
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="94dp"
-                android:inputType="textEmailAddress"
-                android:ems="10"
-                android:hint="@string/email"
-                android:autofillHints="@string/email"
-                android:id="@+id/emailText"/>
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="94dp"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:hint="@string/password"
-                android:autofillHints="@string/password"
-                android:id="@+id/passwordText"/>
-        <LinearLayout
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-            <Button android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login"
-                    android:id="@+id/buttonLogin"/>
-
-
-            <Button
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/signup"
-                    android:id="@+id/buttonSignUp"
-            />
-        </LinearLayout>
-
-
+        <!--<Button android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="checkLogin"-->
+                <!--android:id="@+id/buttonLoginCheck"-->
+        <!--/>-->
     </LinearLayout>
 
 
-</FrameLayout>
+</LinearLayout>
+
+
